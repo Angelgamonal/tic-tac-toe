@@ -71,6 +71,8 @@ function App() {
 						Reset
 					</button>
 				</section>
+
+				<h2>probando push de git</h2>
 			</main>
 		</>
 	);
