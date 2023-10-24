@@ -1,12 +1,22 @@
 import { useState } from 'react';
 
 const TURNS = {
-	X: 'x',
+	X: 'X',
 	O: 'O',
 };
-const Square = ({ children, updateBoard, index, isSelect = '' }) => {
+
+const INITIAL_STATE = Array(9).fill(null);
+
+const Square = ({ children, updateBoard, index, isSelected }) => {
+	const handleClick = () => {
+		updateBoard(index);
+	};
+
 	return (
-		<div className={`square ${isSelect}`} onClick={updateBoard}>
+		<div
+			className={`square ${isSelected ? 'is-selected' : ''}`}
+			onClick={handleClick}
+		>
 			{children}
 		</div>
 	);
@@ -14,12 +24,18 @@ const Square = ({ children, updateBoard, index, isSelect = '' }) => {
 
 function App() {
 	const [turn, setTurn] = useState(TURNS.X);
-	const [board, setBoard] = useState(Array(9).fill(null));
+	const [board, setBoard] = useState(INITIAL_STATE);
 
-	const handleUpdateBoard = () => {
+	const updateBoard = (index) => {
+		if (board[index] !== null) return;
+
 		setTurn(turn === TURNS.X ? TURNS.O : TURNS.X);
+
+		const newBoard = [...board];
+		newBoard[index] = turn;
+
+		setBoard(newBoard);
 	};
-	console.log(turn);
 
 	return (
 		<>
@@ -27,8 +43,8 @@ function App() {
 				<h1>Tic tac toe</h1>
 				<section className="game">
 					{board.map((_, index) => (
-						<Square key={index} index={index} updateBoard={handleUpdateBoard}>
-							{index}
+						<Square key={index} index={index} updateBoard={updateBoard}>
+							{_}
 						</Square>
 					))}
 				</section>
@@ -42,8 +58,18 @@ function App() {
 						gap: '10px',
 					}}
 				>
-					<Square isSelect="is-selected">X</Square>
-					<Square>Y</Square>
+					<Square isSelected={TURNS.X === turn}>{TURNS.X}</Square>
+					<Square isSelected={TURNS.O === turn}>{TURNS.O}</Square>
+				</section>
+
+				<section>
+					<button
+						onClick={() => {
+							setBoard(INITIAL_STATE);
+						}}
+					>
+						Reset
+					</button>
 				</section>
 			</main>
 		</>
